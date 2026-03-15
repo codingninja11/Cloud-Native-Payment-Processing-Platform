@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Platform</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Payment Platform</h1>
+      <p class="subtitle">Cloud-Native Payment Processing</p>
+      <nav class="tabs">
+        <button class="tab active" data-tab="payments">Payments</button>
+        <button class="tab" data-tab="orders">Orders</button>
+        <button class="tab" data-tab="fraud">Fraud Rules</button>
+      </nav>
+    </header>
+
+    <main class="content">
+      <!-- Payments Section -->
+      <section id="payments" class="panel active">
+        <div class="card">
+          <h2>Create Payment</h2>
+          <form id="payment-form" class="form">
+            <div class="form-row">
+              <label>
+                Order ID
+                <input type="text" name="orderId" placeholder="ORD-123456" required>
+              </label>
+              <label>
+                User ID
+                <input type="text" name="userId" placeholder="USER-789" required>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Amount
+                <input type="number" name="amount" step="0.01" placeholder="100.50" required>
+              </label>
+              <label>
+                Currency
+                <input type="text" name="currency" value="USD" placeholder="USD">
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Payment Method
+                <input type="text" name="paymentMethod" value="CARD" placeholder="CARD">
+              </label>
+              <label>
+                Card Last 4
+                <input type="text" name="cardLast4" placeholder="4242" maxlength="4">
+              </label>
+            </div>
+            <div class="form-row">
+              <label class="full-width">
+                Idempotency Key
+                <input type="text" name="idempotencyKey" placeholder="unique-key-123" required>
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Payment</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Lookup Payment</h2>
+          <form id="payment-lookup-form" class="form inline-form">
+            <input type="text" name="paymentId" placeholder="PAY-xxxxxxxx" required>
+            <button type="submit" class="btn btn-secondary">Get Payment</button>
+          </form>
+          <div id="payment-result" class="result-box"></div>
+        </div>
+      </section>
+
+      <!-- Orders Section -->
+      <section id="orders" class="panel">
+        <div class="card">
+          <h2>Create Order</h2>
+          <form id="order-form" class="form">
+            <div class="form-row">
+              <label>
+                User ID
+                <input type="text" name="userId" placeholder="USER-789" required>
+              </label>
+              <label>
+                Amount
+                <input type="number" name="amount" step="0.01" placeholder="100.50" required>
+              </label>
+              <label>
+                Currency
+                <input type="text" name="currency" value="USD" placeholder="USD">
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Order</button>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Lookup Order</h2>
+          <form id="order-lookup-form" class="form inline-form">
+            <input type="text" name="orderId" placeholder="ORD-xxxxxxxx" required>
+            <button type="submit" class="btn btn-secondary">Get Order</button>
+          </form>
+          <div id="order-result" class="result-box"></div>
+        </div>
+      </section>
+
+      <!-- Fraud Section -->
+      <section id="fraud" class="panel">
+        <div class="card">
+          <h2>Fraud Rules</h2>
+          <p class="muted">Rules-based fraud evaluation configuration.</p>
+          <button id="load-fraud-rules" class="btn btn-secondary">Load Rules</button>
+          <div id="fraud-result" class="result-box"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+  </div>
+  <script src="/js/app.js"></script>
+</body>
+</html>

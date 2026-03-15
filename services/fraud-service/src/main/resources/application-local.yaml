@@ -1,0 +1,5 @@
+# Local profile: no Kafka - /api/fraud/rules works, event processing disabled
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration

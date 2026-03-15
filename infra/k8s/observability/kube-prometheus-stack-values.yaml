@@ -1,0 +1,17 @@
+grafana:
+  enabled: true
+  service:
+    type: ClusterIP
+  adminUser: admin
+  adminPassword: prom-operator
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    scrapeInterval: 15s
+    serviceMonitorSelector: {}
+    podMonitorSelector: {}
+
+alertmanager:
+  enabled: true
+

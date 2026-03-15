@@ -1,0 +1,36 @@
+image:
+  repository: ""
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+ingress:
+  enabled: false
+  className: "nginx"
+  hosts: []
+
+# Optional: secret containing DB_URL, DB_USERNAME, DB_PASSWORD, KAFKA_BOOTSTRAP_SERVERS, EVENTHUB_CONNECTION_STRING
+# Create with: kubectl create secret generic platform-config --from-literal=db-url=... --from-literal=db-username=... etc.
+configSecret: ""
+
+env: []
+

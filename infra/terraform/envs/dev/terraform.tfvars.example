@@ -1,0 +1,27 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# NEVER commit terraform.tfvars to version control (it may contain secrets).
+
+# Required: Azure Resource Group (create manually or use existing)
+resource_group_name = "cnpp-dev-rg"
+location            = "eastus"
+
+# AKS cluster
+aks_cluster_name = "cnpp-aks-dev"
+aks_dns_prefix   = "cnpp-dev"
+aks_node_count   = 1
+
+# PostgreSQL - use strong passwords in production
+db_admin_username = "cnppadmin"
+db_admin_password = "CHANGE_ME_STRONG_PASSWORD"
+
+# Event Hubs namespace (must be globally unique)
+event_hubs_namespace = "cnpp-dev-eh"
+
+# Key Vault (alphanumeric and hyphens only, 3-24 chars)
+key_vault_name = "cnpp-kv-dev"
+
+# Log Analytics
+log_analytics_workspace_name = "cnpp-log-dev"
+
+# Azure Container Registry (alphanumeric only, 5-50 chars, globally unique)
+acr_name = "cnppacrdev"

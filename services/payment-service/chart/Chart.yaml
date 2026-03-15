@@ -1,0 +1,11 @@
+apiVersion: v2
+name: payment-service
+description: Payment service for the cloud-native payment platform
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: base-service
+    version: 0.1.0
+    repository: "file://../../../infra/k8s/charts/base-service"
+

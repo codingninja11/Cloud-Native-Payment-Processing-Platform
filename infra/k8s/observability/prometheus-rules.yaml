@@ -1,0 +1,26 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: payment-platform-rules
+  namespace: observability
+spec:
+  groups:
+    - name: payment-service.rules
+      rules:
+        - alert: HighPaymentErrorRate
+          expr: sum(rate(http_server_requests_seconds_count{application="payment-service", outcome="ERROR"}[5m])) / sum(rate(http_server_requests_seconds_count{application="payment-service"}[5m])) > 0.02
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High error rate on payment-service"
+            description: "Payment service error rate >2% for 10 minutes."
+        - alert: HighPaymentLatency
+          expr: histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application="payment-service"}[5m])) by (le)) > 0.5
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High p95 latency on payment-service"
+            description: "p95 latency > 500ms on payment-service."
+

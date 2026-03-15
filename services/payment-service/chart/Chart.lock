@@ -1,0 +1,6 @@
+dependencies:
+- name: base-service
+  repository: file://../../../infra/k8s/charts/base-service
+  version: 0.1.0
+digest: sha256:230e71846dd81fc9ada95c210f3d4d562316a4134c6ba63837fb32d0612b3eb8
+generated: "2026-03-14T14:42:31.171764+05:30"

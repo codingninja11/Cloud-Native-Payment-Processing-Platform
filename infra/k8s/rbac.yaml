@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: payment-service
+  namespace: dev
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: order-service
+  namespace: dev
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fraud-service
+  namespace: dev
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-read-config
+  namespace: dev
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: payment-service-read-config
+  namespace: dev
+subjects:
+  - kind: ServiceAccount
+    name: payment-service
+    namespace: dev
+roleRef:
+  kind: Role
+  name: app-read-config
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: order-service-read-config
+  namespace: dev
+subjects:
+  - kind: ServiceAccount
+    name: order-service
+    namespace: dev
+roleRef:
+  kind: Role
+  name: app-read-config
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fraud-service-read-config
+  namespace: dev
+subjects:
+  - kind: ServiceAccount
+    name: fraud-service
+    namespace: dev
+roleRef:
+  kind: Role
+  name: app-read-config
+  apiGroup: rbac.authorization.k8s.io
+

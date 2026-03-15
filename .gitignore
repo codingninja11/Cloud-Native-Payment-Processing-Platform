@@ -1,0 +1,47 @@
+### Build artifacts
+target/
+*/target/
+*.class
+*.jar
+*.war
+*.ear
+
+### Maven
+log/
+.mvn/wrapper/maven-wrapper.jar
+
+### IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+
+### OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+### Node / frontend (if present)
+node_modules/
+dist/
+build/
+
+### Local environment / secrets
+.env
+.env.*
+*.local
+
+### Logs & temp
+*.log
+logs/
+tmp/
+temp/
+
+### Test / helper docs not for repo
+HOW_TO_RUN.md
+test.md
+

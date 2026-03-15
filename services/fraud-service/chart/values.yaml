@@ -1,0 +1,13 @@
+base-service:
+  image:
+    repository: REPLACE_ME_ACR/fraud-service
+    tag: "dev"
+  service:
+    port: 80
+  ingress:
+    enabled: false
+  configSecret: "platform-config"
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "kubernetes"
+

@@ -1,0 +1,32 @@
+{
+  "title": "Payment Platform - Overview",
+  "schemaVersion": 38,
+  "version": 1,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Payment Requests per Second",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"payment-service\"}[1m]))",
+          "legendFormat": "payment-service",
+          "interval": ""
+        }
+      ],
+      "datasource": "Prometheus"
+    },
+    {
+      "type": "graph",
+      "title": "Payment Error Rate",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count{application=\"payment-service\", outcome=\"ERROR\"}[5m])) / sum(rate(http_server_requests_seconds_count{application=\"payment-service\"}[5m]))",
+          "legendFormat": "error-rate",
+          "interval": ""
+        }
+      ],
+      "datasource": "Prometheus"
+    }
+  ]
+}
+

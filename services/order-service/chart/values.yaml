@@ -1,0 +1,16 @@
+base-service:
+  image:
+    repository: REPLACE_ME_ACR/order-service
+    tag: "dev"
+  service:
+    port: 80
+  ingress:
+    enabled: true
+    hosts:
+      - host: REPLACE_ME_HOST
+        path: /api/orders
+  configSecret: "platform-config"
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "kubernetes"
+
