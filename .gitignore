@@ -42,6 +42,6 @@ tmp/
 temp/
 
 ### Test / helper docs not for repo
-HOW_TO_RUN.md
+run.md
 test.md
 
