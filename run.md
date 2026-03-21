@@ -118,7 +118,83 @@ cd ../fraud-service && mvn -B package -DskipTests
 
 ---
 
-## Option 4: Deploy to Azure (AKS)
+## Option 4: Deploy to Kubernetes (images from GHCR)
+
+Use **any** cluster (minikube, kind, k3d, cloud vendor, etc.). Images are built on push to `main` by `.github/workflows/publish-images.yml` and land in **GitHub Container Registry**:
+
+`ghcr.io/<your-github-owner-lowercase>/<payment-service|order-service|fraud-service>:dev`
+
+### 1. Cluster and namespace
+
+```bash
+# Example: minikube
+minikube start
+
+kubectl apply -f infra/k8s/namespaces.yaml
+```
+
+### 2. Pull images from GHCR
+
+- If packages are **public**, no extra step.
+- If **private**, create a pull secret and ensure Pods use it (you may need to extend the Helm chart with `imagePullSecrets`, or temporarily use `kubectl patch` on the Deployment after install).
+
+```bash
+# GitHub → Settings → Developer settings → Fine-grained or classic PAT with read:packages
+kubectl create secret docker-registry ghcr-credentials \
+  --namespace=dev \
+  --docker-server=ghcr.io \
+  --docker-username=YOUR_GITHUB_USERNAME \
+  --docker-password=YOUR_TOKEN
+# Then wire this secret into your chart or patch deployments to reference it.
+```
+
+### 3. Platform secret (`platform-config`)
+
+Services expect a Secret named `platform-config` in namespace `dev` (see each service `chart/values.yaml`: `configSecret`).
+
+- **Still using Azure PostgreSQL + Event Hubs?** Use `./ops/create-platform-secret.sh` with your connection details (same as before).
+- **Self-managed DB/Kafka:** create the same keys your apps need (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `KAFKA_BOOTSTRAP_SERVERS`, plus any Kafka SASL vars your profile requires—compare with `ops/create-platform-secret.sh`).
+
+### 4. Install ingress (optional)
+
+If you use ingress routes from the charts, install an ingress controller (for example the manifest under `infra/k8s/` or the official NGINX Ingress Helm chart), then set `base-service.ingress.hosts` via `--set` or by editing each service `values.yaml` (`REPLACE_ME_HOST`).
+
+### 5. Helm install
+
+Replace `YOUR_GITHUB_OWNER` with your GitHub user or org name **in lowercase**.
+
+```bash
+export OWNER=your-github-owner   # lowercase
+
+helm dependency update services/payment-service/chart
+helm dependency update services/order-service/chart
+helm dependency update services/fraud-service/chart
+
+helm upgrade --install payment-service services/payment-service/chart -n dev \
+  --set base-service.image.repository=ghcr.io/$OWNER/payment-service \
+  --set base-service.image.tag=dev
+
+helm upgrade --install order-service services/order-service/chart -n dev \
+  --set base-service.image.repository=ghcr.io/$OWNER/order-service \
+  --set base-service.image.tag=dev
+
+helm upgrade --install fraud-service services/fraud-service/chart -n dev \
+  --set base-service.image.repository=ghcr.io/$OWNER/fraud-service \
+  --set base-service.image.tag=dev
+```
+
+### 6. Verify
+
+```bash
+kubectl get pods -n dev
+kubectl get ingress -n dev   # if ingress enabled
+```
+
+**Local images (no GHCR):** from the **repo root**, `docker build -f services/payment-service/Dockerfile -t ghcr.io/$OWNER/payment-service:dev .` (same pattern for `order-service` / `fraud-service`), then `docker push` after `docker login ghcr.io`, or load into kind/minikube (`minikube image load`, `kind load docker-image`).
+
+---
+
+## Option 5: Deploy to Azure (AKS)
 
 ### 1. Provision infrastructure
 

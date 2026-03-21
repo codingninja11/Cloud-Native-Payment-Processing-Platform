@@ -1,8 +1,10 @@
+# Build context must be the repository root, e.g.:
+#   docker build -f services/payment-service/Dockerfile .
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /workspace
-COPY pom.xml .
+COPY services/payment-service/pom.xml .
 RUN mvn -q -e -B dependency:go-offline
-COPY src ./src
+COPY services/payment-service/src ./src
 RUN mvn -q -e -B package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine

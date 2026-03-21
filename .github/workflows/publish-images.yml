@@ -30,29 +30,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
       - name: Build and push payment-service
         run: |
-          cd services/payment-service
-          mvn -B -q package -DskipTests
-          docker build -t "$REGISTRY_PREFIX/payment-service:dev" .
+          docker build -f services/payment-service/Dockerfile -t "$REGISTRY_PREFIX/payment-service:dev" .
           docker push "$REGISTRY_PREFIX/payment-service:dev"
 
       - name: Build and push order-service
         run: |
-          cd services/order-service
-          mvn -B -q package -DskipTests
-          docker build -t "$REGISTRY_PREFIX/order-service:dev" .
+          docker build -f services/order-service/Dockerfile -t "$REGISTRY_PREFIX/order-service:dev" .
           docker push "$REGISTRY_PREFIX/order-service:dev"
 
       - name: Build and push fraud-service
         run: |
-          cd services/fraud-service
-          mvn -B -q package -DskipTests
-          docker build -t "$REGISTRY_PREFIX/fraud-service:dev" .
+          docker build -f services/fraud-service/Dockerfile -t "$REGISTRY_PREFIX/fraud-service:dev" .
           docker push "$REGISTRY_PREFIX/fraud-service:dev"
