@@ -1,6 +1,7 @@
 base-service:
   image:
-    repository: REPLACE_ME_ACR/payment-service
+    # e.g. ghcr.io/my-org/payment-service (must match CD publish-images workflow)
+    repository: ghcr.io/YOUR_GITHUB_OWNER/payment-service
     tag: "dev"
   service:
     port: 80

@@ -51,7 +51,7 @@ The architecture follows the plan in `docs/` and can be summarized as:
   - Fluent Bit/AKS integration with Log Analytics for centralized logs.
 - **DevOps & Security**:
   - Terraform for infrastructure as code.
-  - GitHub Actions for CI/CD (build, scan, deploy).
+  - GitHub Actions for CI/CD (build, test, scan, publish images to GHCR).
   - RBAC, NetworkPolicies, Key Vault, and TLS for security and compliance.
 
 ### Repository Structure
@@ -89,9 +89,8 @@ Planned structure (files/folders will be added progressively as you follow the g
      - Logging components
 
 4. **Build & Deploy Microservices**
-   - Use GitHub Actions (or local `docker build` and `helm upgrade --install`) to:
-     - Build Docker images and push to Azure Container Registry (ACR).
-     - Deploy Helm charts for `payment-service`, `order-service`, and `fraud-service`.
+   - On push to `main`, GitHub Actions builds Docker images and pushes them to **GitHub Container Registry** (`ghcr.io/<owner>/<service>:dev`).
+   - For a Kubernetes cluster (local or any cloud), set chart `base-service.image.repository` to those GHCR paths and run `helm upgrade --install` (or use ACR/other registries if you prefer).
 
 5. **Run Load Tests & Observe Autoscaling**
    - Use k6/JMeter configs in `ops/load` to generate payment traffic.

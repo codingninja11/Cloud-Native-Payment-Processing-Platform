@@ -1,6 +1,6 @@
 base-service:
   image:
-    repository: REPLACE_ME_ACR/order-service
+    repository: ghcr.io/YOUR_GITHUB_OWNER/order-service
     tag: "dev"
   service:
     port: 80

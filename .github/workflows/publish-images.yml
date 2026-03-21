@@ -1,0 +1,58 @@
+name: CD - Publish images to GHCR
+
+# Pushes to ghcr.io/<lowercase-github-owner>/<service>:dev using GITHUB_TOKEN.
+# Repo Settings → Actions → General: ensure "Read and write permissions" for workflows,
+# or rely on the permissions block below (packages: write).
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set GHCR image prefix
+        run: |
+          echo "REGISTRY_PREFIX=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build and push payment-service
+        run: |
+          cd services/payment-service
+          mvn -B -q package -DskipTests
+          docker build -t "$REGISTRY_PREFIX/payment-service:dev" .
+          docker push "$REGISTRY_PREFIX/payment-service:dev"
+
+      - name: Build and push order-service
+        run: |
+          cd services/order-service
+          mvn -B -q package -DskipTests
+          docker build -t "$REGISTRY_PREFIX/order-service:dev" .
+          docker push "$REGISTRY_PREFIX/order-service:dev"
+
+      - name: Build and push fraud-service
+        run: |
+          cd services/fraud-service
+          mvn -B -q package -DskipTests
+          docker build -t "$REGISTRY_PREFIX/fraud-service:dev" .
+          docker push "$REGISTRY_PREFIX/fraud-service:dev"
