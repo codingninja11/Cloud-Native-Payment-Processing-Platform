@@ -71,7 +71,7 @@ docker run -d --name kafka \
 For local runs, set these environment variables before starting each service:
 
 ```bash
-export DB_URL=jdbc:postgresql://localhost:5432/paymentdb
+export DB_URL=jdbc:postgresql://db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require
 export DB_USERNAME=postgres
 export DB_PASSWORD=postgres
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
