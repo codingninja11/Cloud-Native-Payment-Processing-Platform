@@ -10,9 +10,14 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Hibernate 6: do not require JDBC only to detect dialect (helps when the DB is unreachable at bootstrap).
+        boot:
+          allow_jdbc_metadata_access: false
         format_sql: true
 
 # See whether Postgres is reachable: GET http://localhost:8080/actuator/health (db component should be UP)

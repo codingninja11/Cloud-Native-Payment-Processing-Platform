@@ -16,6 +16,7 @@ spring:
     name: order-service
 
   datasource:
+    # Must be JDBC (jdbc:postgresql://...), not a postgres:// URI from Render/Supabase copy-paste without conversion.
     url: ${DB_URL:jdbc:postgresql://localhost:5432/paymentdb}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
@@ -24,6 +25,7 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
