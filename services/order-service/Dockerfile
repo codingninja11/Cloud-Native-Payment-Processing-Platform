@@ -8,6 +8,7 @@ COPY services/order-service/src ./src
 RUN mvn -q -e -B package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
+RUN apk add --no-cache ca-certificates && update-ca-certificates
 RUN addgroup -S app && adduser -S app -G app
 USER app
 WORKDIR /app

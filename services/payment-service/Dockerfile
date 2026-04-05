@@ -8,6 +8,8 @@ COPY services/payment-service/src ./src
 RUN mvn -q -e -B package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
+# Ensure TLS trust store can validate Supabase (and other cloud) Postgres endpoints on minimal Alpine images.
+RUN apk add --no-cache ca-certificates && update-ca-certificates
 RUN addgroup -S app && adduser -S app -G app
 USER app
 WORKDIR /app
