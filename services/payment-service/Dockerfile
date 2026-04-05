@@ -15,5 +15,6 @@ USER app
 WORKDIR /app
 COPY --from=build /workspace/target/payment-service-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+# Prefer IPv4 when connecting to external Postgres (e.g. Supabase from Render); avoids some IPv6-only DNS paths that never complete.
+ENTRYPOINT ["java","-Djava.net.preferIPv4Stack=true","-jar","/app/app.jar"]
 

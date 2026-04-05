@@ -14,5 +14,5 @@ USER app
 WORKDIR /app
 COPY --from=build /workspace/target/order-service-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8081
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java","-Djava.net.preferIPv4Stack=true","-jar","/app/app.jar"]
 

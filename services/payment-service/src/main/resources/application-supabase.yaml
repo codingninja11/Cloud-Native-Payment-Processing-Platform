@@ -21,7 +21,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        # Hibernate 6: do not require JDBC only to detect dialect when the pool is still connecting.
         boot:
           allow_jdbc_metadata_access: false
         format_sql: true
@@ -36,3 +35,8 @@ management:
 logging:
   level:
     org.hibernate.orm.jdbc.bind: WARN
+    # Hibernate 6.4 warns (HHH90000025) when dialect is explicit; we need it when JDBC metadata is disabled above.
+    org.hibernate.orm.deprecation: ERROR
+    # Surface the real reason when Hikari cannot reach Supabase (timeout, SSL, auth, etc.).
+    com.zaxxer.hikari: DEBUG
+    org.postgresql: DEBUG

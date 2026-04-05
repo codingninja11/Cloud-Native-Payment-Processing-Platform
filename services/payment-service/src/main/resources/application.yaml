@@ -25,8 +25,6 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
-    # Avoid "Unable to determine Dialect without JDBC metadata" when the DB is slow/unreachable at startup (e.g. cloud networking).
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
