@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@org.springframework.context.annotation.Profile("!local")
+@org.springframework.context.annotation.Profile("!local & !supabase")
 public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")

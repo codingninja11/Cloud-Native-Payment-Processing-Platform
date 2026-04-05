@@ -1,0 +1,20 @@
+# Same DB_* env vars as payment-service. Orders from the UI hit this service (port 8081).
+# You still need Kafka reachable for consumers; POST /api/orders saves to Postgres without waiting on Kafka.
+spring:
+  flyway:
+    enabled: false
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: WARN

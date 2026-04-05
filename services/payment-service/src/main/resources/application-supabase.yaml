@@ -1,0 +1,27 @@
+# Activate with: SPRING_PROFILES_ACTIVE=supabase (plus DB_URL / DB_USERNAME / DB_PASSWORD from Supabase).
+# Supabase → Project Settings → Database: use the direct host (port 5432), not the pooler, unless you know it's compatible.
+# The subdomain is db.<PROJECT_REF>.supabase.co — PROJECT_REF is shown in the dashboard (not necessarily your GitHub username).
+#
+# If you already ran the CREATE TABLE scripts in the SQL Editor, turn Flyway off so migrations are not applied twice:
+spring:
+  flyway:
+    enabled: false
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# See whether Postgres is reachable: GET http://localhost:8080/actuator/health (db component should be UP)
+management:
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: WARN

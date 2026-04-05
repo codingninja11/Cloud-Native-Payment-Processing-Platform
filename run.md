@@ -46,6 +46,75 @@ curl -X POST http://localhost:8080/api/payments \
 
 ---
 
+## Localhost: Supabase + `.env` (order + payment)
+
+Use this when your database is **Supabase Postgres** and credentials live in a **`.env`** file at the **repository root** (same folder as `ops/load-env.sh`).
+
+**Important:** Spring Boot does **not** read `.env` files. You must **`source ops/load-env.sh`** in **each** terminal before `mvn spring-boot:run`, or copy `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `SPRING_PROFILES_ACTIVE`, etc. into your IDE run configuration.
+
+### 1. Kafka (required for order-service with `supabase` profile)
+
+Order-service still connects to Kafka consumers on `localhost:9092`. Start a broker first:
+
+```bash
+docker run -d --name kafka -p 9092:9092 apache/kafka:latest
+```
+
+If Kafka is already running, skip this step.
+
+### 2. Terminal — order-service (port 8081)
+
+From the **repository root** (directory containing `ops/` and `.env`):
+
+```bash
+source ops/load-env.sh
+cd services/order-service && mvn spring-boot:run
+```
+
+### 3. Terminal — payment-service (port 8080, Web UI)
+
+Open a **new** terminal, again from the **repository root**:
+
+```bash
+source ops/load-env.sh
+cd services/payment-service && mvn spring-boot:run
+```
+
+### 4. Optional — fraud-service (port 8082)
+
+```bash
+source ops/load-env.sh
+cd services/fraud-service && mvn spring-boot:run
+```
+
+### 5. Verify services and database target
+
+```bash
+curl -s http://localhost:8081/actuator/health
+curl -s http://localhost:8080/actuator/health
+```
+
+In each service’s startup logs, confirm **`Datasource URL`** points at Supabase (`db.<project-ref>.supabase.co`), not `jdbc:postgresql://localhost:5432/paymentdb`.
+
+### 6. Create an order, then a payment
+
+```bash
+# Create order (returns orderId in JSON)
+curl -s -X POST http://localhost:8081/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{"amount":12.34,"userId":"local-test","currency":"USD"}'
+
+# Create payment (replace ORD-... with the orderId from above)
+curl -s -X POST http://localhost:8080/api/payments \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: local-test-001" \
+  -d '{"orderId":"ORD-REPLACE_ME","userId":"local-test","amount":12.34,"currency":"USD"}'
+```
+
+- **Web UI:** http://localhost:8080  
+
+---
+
 ## Option 2: All Services Locally (with Docker)
 
 Run the full event-driven flow: Payment → Kafka → Fraud → Order.
@@ -68,7 +137,9 @@ docker run -d --name kafka \
 
 ### Step 2: Create platform secret (for Kubernetes) or set env vars
 
-For local runs, set these environment variables before starting each service:
+For local runs, set these environment variables before starting each service.
+
+**Either** export manually:
 
 ```bash
 export DB_URL=jdbc:postgresql://db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require
@@ -77,20 +148,25 @@ export DB_PASSWORD=postgres
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 ```
 
+**Or** put the same keys in a **`.env`** at the repo root and run **`source ops/load-env.sh`** in each terminal before `mvn` (see **Localhost: Supabase + `.env`** above).
+
 ### Step 3: Run all services
 
-Open **3 terminals** and run:
+Open **3 terminals**. From the **repository root**, load env if you use `.env`, then:
 
 ```bash
 # Terminal 1 - Payment Service (port 8080)
+source ops/load-env.sh   # omit if you already exported DB_* / KAFKA_* manually
 cd services/payment-service
 mvn spring-boot:run
 
 # Terminal 2 - Order Service (port 8081)
+source ops/load-env.sh
 cd services/order-service
 mvn spring-boot:run
 
 # Terminal 3 - Fraud Service (port 8082)
+source ops/load-env.sh
 cd services/fraud-service
 mvn spring-boot:run
 ```
@@ -275,6 +351,8 @@ kubectl get ingress -n dev
 | Port already in use | Stop other processes on 8080, 8081, 8082 or change ports in `application.yaml` |
 | `mvn: command not found` | Install Maven: `brew install maven` |
 | CORS errors in UI | Ensure order-service and fraud-service are running (they have CORS enabled for localhost:8080) |
+| API works but rows missing in Supabase | Spring does not read `.env`; run `source ops/load-env.sh` in the same shell before `mvn`, or set env vars in the IDE. Check logs for `Datasource URL` — it must show your Supabase host. |
+| `source ops/load-env.sh` then wrong directory | Always `cd` to **repository root** first (where `ops/load-env.sh` lives), then `source ops/load-env.sh`, then `cd services/...`. |
 
 ---
 

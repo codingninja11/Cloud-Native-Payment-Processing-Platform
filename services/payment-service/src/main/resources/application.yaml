@@ -16,8 +16,8 @@ spring:
     name: payment-service
 
   datasource:
-    # Default targets Supabase; set DB_URL for local Docker Postgres (e.g. jdbc:postgresql://localhost:5432/paymentdb).
-    url: ${DB_URL:jdbc:postgresql://db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require}
+    # For Supabase set DB_URL (jdbc:postgresql://db.<ref>.supabase.co:5432/postgres?sslmode=require) and DB_PASSWORD in the environment.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/paymentdb}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
 

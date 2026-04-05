@@ -6,6 +6,16 @@ const API = {
   fraud: isLocal ? 'http://localhost:8082' : ''
 };
 
+// Fresh idempotency key per page load so repeat "Create payment" tests insert new rows (same key = same payment only).
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('payment-form');
+  if (!form) return;
+  const ik = form.querySelector('input[name=idempotencyKey]');
+  if (ik && !ik.value.trim()) {
+    ik.value = `web-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+});
+
 function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = message;

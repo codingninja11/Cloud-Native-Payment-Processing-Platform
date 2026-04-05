@@ -37,7 +37,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    public ResponseEntity<Map<String, Object>> getPayment(@PathVariable String paymentId) {
+    public ResponseEntity<Map<String, Object>> getPayment(@PathVariable("paymentId") String paymentId) {
         return paymentService.getByPaymentId(paymentId)
                 .map(p -> {
                     Map<String, Object> body = new HashMap<>();

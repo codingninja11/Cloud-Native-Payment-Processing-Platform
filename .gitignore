@@ -42,7 +42,3 @@ logs/
 tmp/
 temp/
 
-### Test / helper docs not for repo
-run.md
-test.md
-

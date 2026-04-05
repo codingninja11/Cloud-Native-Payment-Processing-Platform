@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Map<String, Object>> getOrder(@PathVariable String orderId) {
+    public ResponseEntity<Map<String, Object>> getOrder(@PathVariable("orderId") String orderId) {
         return orderRepository.findByOrderId(orderId)
                 .map(o -> {
                     Map<String, Object> body = new HashMap<>();
