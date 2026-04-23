@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@CrossOrigin(origins = {
+        "http://localhost:8080",
+        "https://cloud-native-payment-processing-platform.onrender.com"
+})
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {

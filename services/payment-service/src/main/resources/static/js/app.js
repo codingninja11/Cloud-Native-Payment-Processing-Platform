@@ -2,7 +2,7 @@
 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const API = {
   payments: isLocal ? 'http://localhost:8080' : '',
-  orders: isLocal ? 'http://localhost:8081' : '',
+  orders: isLocal ? 'http://localhost:8081' : 'https://order-service-5k7f.onrender.com',
   fraud: isLocal ? 'http://localhost:8082' : ''
 };
 
